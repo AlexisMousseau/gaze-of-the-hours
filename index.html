@@ -16,12 +16,8 @@
             -webkit-overflow-scrolling: unset;
         }
 
-        div
-        {
-            /* text-align: center; */
+        div {
             position: absolute;
-            /* width: 100px; */
-            /* overflow: hidden; */
             -webkit-user-select: none;
             /* Safari */
             -ms-user-select: none;
@@ -29,24 +25,22 @@
             user-select: none;
             /* Standard syntax */
         }
+
         div.card {
-            text-align: center;
             position: absolute;
-            width: 100px;
             overflow: hidden;
-            left: -100px;
             border-radius: 7%;
             cursor: move;
             z-index: 0;
-    
+
         }
 
-        .card-place{
+        .card-place {
             width: 100px;
-            height: 160px;             
-            border:1px solid black;
+            height: 160px;
+            border: 1px solid black;
             border-radius: 20px;
-            border-color: aliceblue;                    
+            border-color: aliceblue;
         }
 
         .notransition {
@@ -65,11 +59,6 @@
         }
 
         img.card {
-            object-fit: none;
-            /* Do not scale the image */
-            object-position: center;
-            /* Center the image within the element */
-            width: 100%;
             border-radius: 15%;
             margin: -2px 0;
 
@@ -91,21 +80,19 @@
         let shuffled_card_ids;
         let num_cards = card_ids.length;
         let currentCards = [false, false, false];
-        let h = window.screen.height;
-        let w = window.screen.width;
         let card_width = 100;
         let card_height = 1.45 * card_width;
-
+        let img_ratio;
         let i = 0;
-            // let h = window.innerHeight;
-            // let w = window.innerWidth;
-            let cw = card_width;
-            let ch = 1.46 * cw;
+        let h = window.innerHeight;
+        let w = window.innerWidth;
+        let cw = card_width;
+        let ch = 1.46 * cw;
 
-            let sw = (w * 0.9) / (num_cards + 2);
-            let sh = 0;
-            let row_margin = w * 0.05;
-            let col_margin = 0;
+        let sw = (w * 0.9) / (num_cards + 2);
+        let sh = 0;
+        let row_margin = w * 0.1;
+        let col_margin = 0;
 
         function drawFromDeck(num_cards) {
             for (let i = 0; i < currentCards.length; i++) {
@@ -183,7 +170,7 @@
             }
 
             function closeDragElement() {
-                elmnt.style.zIndex = `-10`;
+                // elmnt.style.zIndex = `-10`;
                 elmnt.className = `card transition`;
                 // stop moving when mouse button is released:
                 document.onmouseup = null;
@@ -194,35 +181,34 @@
         function loadAllCards() {
             let i = 0;
             let main_section = document.getElementById("main-section");
-            // let img = new Image(card_width);
-            // img.src = `deck/back.jpg`;
+            let h = window.innerHeight;
+            let w = window.innerWidth;
 
             for (let i = 0; i < 3; i++) {
-            let card_div = document.createElement("div");
-            card_div.className = "card-place";                    
-
-            card_div.style.width = `${card_width*1.2}px`;
-            card_div.style.height = `${card_height*1.2}px`;
-            // card_div.style.left = `${card_width}px`;
-            card_div.style.left = `${((i * cw * 2)) + row_margin*3.8}px`;
-            card_div.style.top = `${h / 2 - (card_height / 2) - (card_height * 1.4)}px`;
-            main_section.append(card_div);   
+                let card_div = document.createElement("div");
+                card_div.className = "card-place";
+                card_div.style.width = `${card_width * 1.2}px`;
+                card_div.style.height = `${card_height * 1.2}px`;
+                main_section.append(card_div);
+                setCardXY(card_div, 2 * w / 9 + w / 4 * i, h / 4);
             }
+
             for (let c of card_ids) {
 
                 let img = new Image(card_width);
                 img.src = `deck/back.jpg`;
-                // img.src = `deck/${c}.jpg`;
+                img_ratio = img.naturalHeight / img.naturalWidth
                 let card_div = document.createElement("div");
                 card_div.className = "card transition";
                 card_div.id = c;
                 card_div.style.width = `${card_width}px`;
-                card_div.style.left = `${card_width}px`;
-                card_div.style.top = `${window.screen.height / 2 - (card_height / 2)}px`;
+                card_div.style.width = `${card_width * img_ratio}px`;
+                setCardXY(card_div, -2 * card_width, h / 3);
                 card_div.appendChild(img)
                 main_section.append(card_div);
                 dragElement(card_div);
                 i++;
+
             }
 
             dealAll();
@@ -231,19 +217,18 @@
         loadAllCards();
 
         function dealAll() {
-
-
-
-
             let rotDelta = 0.125 / num_cards;
+             let phi = -Math.PI/2
+             let phiDelta = Math.PI/num_cards;
             let dealInterval = setInterval(() => {
 
+                
                 if (i < num_cards) {
                     let card = document.getElementById(card_ids[i]);
                     card.style.width = `${cw}px`;
                     card.childNodes[0].style.width = `${cw}px`;
-                    card.style.left = `${((sw) * (i)) + row_margin}px`;
-                    card.style.top = `${h / 2 - (card_height / 2)}px`;
+                    let theta = phi + (phiDelta * i)
+                    setCardXY(card, (sw * i) + row_margin, (h / 3)*2 - Math.cos(theta)*100.0);
                     card.style.rotate = `${-0.0625 + (rotDelta * i)}turn`;
                 }
                 else {
@@ -256,20 +241,22 @@
                             let card = document.getElementById(shuffled_card_ids[i]);
                             console.log(card.childNodes[0].src);
                             card.childNodes[0].src = `deck/${shuffled_card_ids[i]}.jpg`;
-                            card.style.left = `${((i * cw * 2)) + row_margin*4}px`;
-                            card.style.top = `${card.style.top - (card_height * 1.2)}px`;
-                            card.style.top = `${100}px`;
+                            setCardXY(card, (2 * w / 9) + ((w / 4) * i), h / 8);
                             card.style.rotate = `${0}turn`;
                         }
 
                     }, 1000);
                 }
-
                 i++;
-
             }, 50);
+        }
 
 
+        function setCardXY(a_card_div, x, y) {
+            let wid = Number(a_card_div.style.width.replace('px', ''));
+            let hgt = Number(a_card_div.style.height.replace('px', ''));
+            a_card_div.style.left = `${x - (wid * 0.5)}px`;
+            a_card_div.style.top = `${y - (hgt * 0.5)}px`;
         }
 
     </script>
