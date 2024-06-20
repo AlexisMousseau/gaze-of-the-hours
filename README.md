@@ -22,7 +22,7 @@ At some point Alexis will explain what this is all about
 |        ![ ](deck/XVI.jpg)        |        ![ ](deck/XVII.jpg)         |         ![ ](deck/XVIII.jpg)         |       ![ ](deck/XIX.jpg)       |
 |         The Wolf Divided          |            The Vagabond             |         The Sister And Witch          |         The Flowermaker         |
 
-| ![The Forge OfDays](deck/XX.jpg) | ![The Mare In The Tree](deck/XXV.jpg) | ![The Crowned Growth](deck/XVII.jpg) |
+| ![The Forge OfDays](deck/XX.jpg) | ![The Mare In The Tree](deck/XXV.jpg) | ![The Crowned Growth](deck/XXVII.jpg) |
 | :-------------------------------: | :------------------------------------: | :-----------------------------------: |
 |         The Forge OfDays          |          The Mare In The Tree          |          The Crowned Growth           |
 
